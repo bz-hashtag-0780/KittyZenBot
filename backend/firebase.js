@@ -1,10 +1,10 @@
 var admin = require('firebase-admin');
-
-var serviceAccount = require('path/to/serviceAccountKey.json');
+require('dotenv').config();
+var serviceAccount = require('./serviceAccountKey.json');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
-	databaseURL: 'kittyzenbot.firebaseio.com', // TODO replace w env var
+	databaseURL: process.env.DATABASE_URL,
 });
 
 const db = admin.firestore();
