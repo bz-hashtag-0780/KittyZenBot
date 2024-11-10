@@ -101,6 +101,45 @@ app.post('/updateCurrency', async (req, res) => {
 	}
 });
 
+app.post('/buyCat', async (req, res) => {
+	const { playerId } = req.body;
+	const catPrice = 3; // Set a fixed price for each new cat
+
+	try {
+		const playerRef = db.collection('players').doc(playerId);
+		const doc = await playerRef.get();
+
+		if (doc.exists) {
+			const playerData = doc.data();
+			if (playerData.currency >= catPrice) {
+				// Deduct vKITTY for the purchase
+				playerData.currency -= catPrice;
+
+				// Add a new Level 1 cat to the player's cats array
+				playerData.cats.push({ level: 1 });
+
+				// Update the player document in Firestore
+				await playerRef.update({
+					currency: playerData.currency,
+					cats: playerData.cats,
+				});
+
+				res.status(200).send({
+					message: `You have purchased a new Level 1 cat!`,
+					currency: playerData.currency,
+					cats: playerData.cats,
+				});
+			} else {
+				res.status(400).send('Not enough vKITTY to buy a new cat.');
+			}
+		} else {
+			res.status(404).send('Player not found.');
+		}
+	} catch (error) {
+		res.status(500).send(error.message);
+	}
+});
+
 bot.onText(/\/start/, (msg) => {
 	const chatId = msg.chat.id;
 	bot.sendMessage(
@@ -174,5 +213,19 @@ bot.onText(/\/updateCurrency/, async (msg) => {
 		bot.sendMessage(chatId, response.data.message);
 	} catch (error) {
 		bot.sendMessage(chatId, 'Error updating vKITTY balance.');
+	}
+});
+
+bot.onText(/\/buycat/, async (msg) => {
+	const chatId = msg.chat.id;
+	const playerId = chatId.toString();
+
+	try {
+		const response = await axios.post('http://localhost:3000/buyCat', {
+			playerId,
+		});
+		bot.sendMessage(chatId, response.data.message);
+	} catch (error) {
+		bot.sendMessage(chatId, 'Error buying a cat: ' + error.response.data);
 	}
 });
