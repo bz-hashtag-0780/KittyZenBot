@@ -140,11 +140,33 @@ app.post('/buyCat', async (req, res) => {
 	}
 });
 
+// bot.onText(/\/start/, (msg) => {
+// 	const chatId = msg.chat.id;
+// 	bot.sendMessage(
+// 		chatId,
+// 		'Welcome to Catizen! Use /profile to view your cat collection and vKITTY balance.'
+// 	);
+// });
+
 bot.onText(/\/start/, (msg) => {
 	const chatId = msg.chat.id;
+	const gameUrl = `https://kitty-zen-bot.vercel.app/kittyzen?playerId=${chatId}`; // Player ID is passed as a query parameter
+
 	bot.sendMessage(
 		chatId,
-		'Welcome to Catizen! Use /profile to view your cat collection and vKITTY balance.'
+		"Welcome to KittyZen! Tap 'Play' to start the game:",
+		{
+			reply_markup: {
+				inline_keyboard: [
+					[
+						{
+							text: 'Play KittyZen',
+							web_app: { url: gameUrl },
+						},
+					],
+				],
+			},
+		}
 	);
 });
 
