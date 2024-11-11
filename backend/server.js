@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
 	cors({
-		origin: 'https://kitty-zen-bot.vercel.app/',
+		origin: 'https://kitty-zen-bot.vercel.app',
 		methods: ['GET', 'POST', 'PUT', 'DELETE'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
 	})
