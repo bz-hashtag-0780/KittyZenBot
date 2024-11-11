@@ -187,7 +187,7 @@ bot.onText(/\/profile/, async (msg) => {
 
 	try {
 		// Send request to backend to fetch player profile
-		const response = await axios.post('http://localhost:3000/player', {
+		const response = await axios.post(`${process.env.HEROKU_URL}/player`, {
 			playerId,
 		});
 		console.log('Received response from backend:', response.data);
@@ -216,11 +216,14 @@ bot.onText(/\/merge (\d+) (\d+)/, async (msg, match) => {
 
 	try {
 		// Send merge request to backend
-		const response = await axios.post('http://localhost:3000/mergeCats', {
-			playerId,
-			catIndex1,
-			catIndex2,
-		});
+		const response = await axios.post(
+			`${process.env.HEROKU_URL}/mergeCats`,
+			{
+				playerId,
+				catIndex1,
+				catIndex2,
+			}
+		);
 
 		bot.sendMessage(chatId, response.data.message);
 	} catch (error) {
@@ -238,7 +241,7 @@ bot.onText(/\/updateCurrency/, async (msg) => {
 	try {
 		// Request to update currency in the backend
 		const response = await axios.post(
-			'http://localhost:3000/updateCurrency',
+			`${process.env.HEROKU_URL}/updateCurrency`,
 			{ playerId }
 		);
 		bot.sendMessage(chatId, response.data.message);
@@ -252,7 +255,7 @@ bot.onText(/\/buycat/, async (msg) => {
 	const playerId = chatId.toString();
 
 	try {
-		const response = await axios.post('http://localhost:3000/buyCat', {
+		const response = await axios.post(`${process.env.HEROKU_URL}/buyCat`, {
 			playerId,
 		});
 		bot.sendMessage(chatId, response.data.message);
