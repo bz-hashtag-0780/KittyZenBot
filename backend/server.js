@@ -3,11 +3,20 @@ const dotenv = require('dotenv');
 const { db } = require('./firebase');
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
+const cors = require('cors');
 dotenv.config();
 
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
-
 const app = express();
+
+app.use(
+	cors({
+		origin: 'https://kitty-zen-bot.vercel.app/',
+		methods: ['GET', 'POST', 'PUT', 'DELETE'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+	})
+);
+
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;

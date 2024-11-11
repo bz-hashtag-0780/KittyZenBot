@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const backendUrl = 'http://localhost:3000';
+const backendUrl = 'https://kittyzen-dfc7b310d5af.herokuapp.com/';
 
 interface Cat {
 	level: number;
